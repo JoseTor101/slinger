@@ -1,7 +1,8 @@
 # Slingshot Ball Game
 
 ![Demo Image](Wiki/img/demo_v1_1.gif)
-
+<br>
+<a href="https://youtu.be/HUpzaBTyreA" target="_blank">Youtube video</a>
 ## Overview
 
 A Unity game where you use a slingshot to propel a ball between pipe platforms. The game challenges your aiming and timing skills.
@@ -10,7 +11,6 @@ A Unity game where you use a slingshot to propel a ball between pipe platforms. 
 
 - Slingshot mechanic for launching the ball
 - Pipe platforms with different challenges
-- Realistic physics
 
 ## Play
 
