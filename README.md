@@ -1,6 +1,6 @@
 # Slingshot Ball Game
 
-![Demo Image](Wiki/img/demo.jpg)
+![Demo Image](Wiki/img/demo_v1_1.gif)
 
 ## Overview
 
