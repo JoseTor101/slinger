@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] public float fallMultiplier = 2.5f;
     [SerializeField] public float lowJumpMultiplier = 2f;
+    [SerializeField] public AudioClip deathSound;
 
     private Vector3 customForce;
     private Rigidbody rb; // Reference to the player's Rigidbody
@@ -16,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI deathMessage;
 
     private PlayerDeath playerDeath;
+    private AudioSource audioSource;
 
     void Start()
     {
@@ -25,6 +27,11 @@ public class PlayerController : MonoBehaviour
         deathMessage.gameObject.SetActive(false); // Hide death message at start
 
         playerDeath = GetComponent<PlayerDeath>();
+
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.clip = deathSound;
+        audioSource.playOnAwake = false;
+        audioSource.loop = false;
     }
 
     void Update()
@@ -89,8 +96,8 @@ public class PlayerController : MonoBehaviour
         deathMessage.gameObject.SetActive(true); // Show the death message
 
         playerDeath.OnPlayerDeath(); // Activate the dissolve effect
-        // Optionally, restart or reset the game after a delay
-        Invoke("RestartGame", 2f); // Restart the game after 2 seconds
+        audioSource.Play();
+        Invoke("RestartGame", 4f); // Restart the game after 2 seconds
     }
 
     // Method to restart the game or reset player state
@@ -106,9 +113,9 @@ public class PlayerController : MonoBehaviour
         deathMessage.gameObject.SetActive(false); // Hide the death message
 
         PipeGenerator pipeGenerator = FindObjectOfType<PipeGenerator>();
-    if (pipeGenerator != null)
-    {
-        pipeGenerator.RestartPipes();
-    }
+        if (pipeGenerator != null)
+        {
+            pipeGenerator.RestartPipes();
+        }
     }
 }

@@ -6,8 +6,12 @@ public class PlayerDeath : MonoBehaviour
     public Material dissolveMaterial; 
     [SerializeField] public float dissolveSpeed = 1.8f;  
     private bool isDissolving = false; 
-    public float dissolveAmount = 0f;
+    public float dissolveAmount = 0.1f;
 
+    void Start()
+    {
+        dissolveMaterial.SetFloat("_DissolveAmount", dissolveAmount);
+    }
     
     void Update()
     {
@@ -19,7 +23,7 @@ public class PlayerDeath : MonoBehaviour
             if (dissolveAmount >= 1f)
             {
 
-                Debug.Log("Dissolve Ammount: " + dissolveAmount);
+                //Debug.Log("Dissolve Ammount: " + dissolveAmount);
                 // Aquí puedes hacer que el jugador desaparezca o sea destruido
                 gameObject.SetActive(false);
             }
@@ -28,8 +32,9 @@ public class PlayerDeath : MonoBehaviour
 
     public void restartDeath()
     {
-        dissolveAmount = 0f;
+        dissolveAmount = 0.1f;
         isDissolving = false;
+        gameObject.SetActive(true);
         dissolveMaterial.SetFloat("_DissolveAmount", dissolveAmount);
     }
 

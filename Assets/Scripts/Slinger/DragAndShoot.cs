@@ -6,20 +6,23 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class DragAndShoot : MonoBehaviour
 {
+    [SerializeField] private AudioClip stretchSound;
+    [SerializeField] private float forceMultiplier = 3;
     private Vector3 mousePressDownPos;
     private Vector3 mouseReleasePos;
     private Rigidbody rb;
+    private AudioSource audioSource;
 
     private bool isShooting;
     private bool canShoot;
-    [SerializeField] private float forceMultiplier = 3;
-    [SerializeField] private AudioClip stretchSound;
     private bool soundPlayedDuringDrag = false;
 
-    private AudioSource audioSource;
 
     void Start()
     {
+
+        isShooting = false;
+        canShoot = true;
         rb = GetComponent<Rigidbody>();
         SetCanShoot(true);
 
