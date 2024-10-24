@@ -103,6 +103,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Alpha: 1
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Blend: 0
@@ -116,12 +117,17 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
+    - _Emission: 1
     - _EnvironmentReflections: 1
+    - _Float: 1
+    - _Float_1: 0
     - _FresnelAmount: 2
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _Height: -19.31
     - _LavaScale2: 1
+    - _LavaSpeed: 3.6
     - _Metallic: 0
     - _NormalStrenght: 10
     - _NormalStrenght2: 5
@@ -131,7 +137,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 0.5
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -139,14 +145,16 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
+    - _alphaIntensity: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FresnelColor: {r: 4.748141, g: 0.42747095, b: 0, a: 0}
-    - _LavaColor: {r: 6.211462, g: 0.2493828, b: 0, a: 0}
-    - _LavaScale1: {r: 1, g: 1, b: 0, a: 0}
-    - _LavaSpeed1: {r: 0.1, g: -0.1, b: 0, a: 0}
+    - _FresnelColor: {r: 383.498, g: 34.525986, b: 0, a: 0}
+    - _LavaColor: {r: 24.845848, g: 0.9975312, b: 0, a: 0}
+    - _LavaScale1: {r: 0.5, g: 8.15, b: 0, a: 0}
+    - _LavaScale2: {r: 0.5, g: 3.74, b: 0, a: 0}
+    - _LavaSpeed1: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _LavaSpeed2: {r: 0.1, g: -0.1, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []

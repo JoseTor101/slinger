@@ -6,20 +6,24 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class DragAndShoot : MonoBehaviour
 {
+    [SerializeField] private AudioClip stretchSound;
+    [SerializeField] private float forceMultiplier = 3;
     private Vector3 mousePressDownPos;
     private Vector3 mouseReleasePos;
     private Rigidbody rb;
+    private AudioSource audioSource;
 
     private bool isShooting;
     private bool canShoot;
-    [SerializeField] private float forceMultiplier = 3;
-    [SerializeField] private AudioClip stretchSound;
     private bool soundPlayedDuringDrag = false;
 
-    private AudioSource audioSource;
+    // Rotation speed for flight
+    [SerializeField] private float rotationSpeedInFlight = 360f; // degrees per second
 
     void Start()
     {
+        isShooting = false;
+        canShoot = true;
         rb = GetComponent<Rigidbody>();
         SetCanShoot(true);
 
@@ -35,6 +39,8 @@ public class DragAndShoot : MonoBehaviour
             return;
         mousePressDownPos = Input.mousePosition;
         soundPlayedDuringDrag = false;
+
+        
     }
 
     private void OnMouseDrag()
@@ -53,6 +59,9 @@ public class DragAndShoot : MonoBehaviour
             audioSource.Play();
             soundPlayedDuringDrag = true;
         }
+
+        // Rotate the sphere based on the drag direction
+        RotateSphere(forceInit);
     }
 
     private void OnMouseUp()
@@ -80,6 +89,8 @@ public class DragAndShoot : MonoBehaviour
         isShooting = true;
         canShoot = false;
 
+        // Start rotating while in flight
+        StartCoroutine(RotateInFlight());
     }
 
     public void SetCanShoot(bool value)
@@ -98,4 +109,24 @@ public class DragAndShoot : MonoBehaviour
         return isShooting;
     }
 
+    // New method to rotate the sphere based on drag
+    private void RotateSphere(Vector3 forceInit)
+    {
+        float rotationSpeed = 2f; // Adjust this value to change rotation speed
+        float rotationZ = forceInit.x * rotationSpeed * Time.deltaTime; // Use X direction for rotation
+
+        // Apply rotation to the sphere
+        transform.Rotate(0, 0, -rotationZ); // Rotate around the Z-axis
+    }
+
+    // Coroutine to rotate the sphere while in flight
+    private IEnumerator RotateInFlight()
+    {
+        while (isShooting)
+        {
+            // Rotate the sphere around the Y-axis for a cool effect
+            transform.Rotate(0, rotationSpeedInFlight * Time.deltaTime, 0);
+            yield return null; // Wait for the next frame
+        }
+    }
 }

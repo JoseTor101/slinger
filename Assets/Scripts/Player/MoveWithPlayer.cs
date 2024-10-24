@@ -12,7 +12,7 @@ public class RepeatBackground : MonoBehaviour
     {
         if (player == null)
         {
-            Debug.LogError("Player is not assigned.");
+            Debug.LogError("Player is not assigned");
             return;
         }
 
