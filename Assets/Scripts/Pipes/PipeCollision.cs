@@ -11,6 +11,7 @@ public class PipeCollision : MonoBehaviour
     private AudioSource audioSource;
     private bool hasScored = false;
     private bool isRaising = false;
+    private bool isColliding;
 
     void Start()
     {
@@ -27,10 +28,9 @@ public class PipeCollision : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        
-
         if (collision.gameObject.CompareTag("Player"))
         {
+            isColliding = true;
             ContactPoint contact = collision.contacts[0];
             Vector3 contactPoint = contact.point;
             PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
@@ -54,8 +54,21 @@ public class PipeCollision : MonoBehaviour
                     StartCoroutine(CenterPlayerOnPipe(playerController, pipeHeight, playerHeight));
                 }
 
-                RaiseKillZone(pipeCollider, pipeHeight);
+                PrepareKillCube(pipeCollider, pipeHeight);
                 dragAndShoot.SetCanShoot(true);
+            }
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            isColliding = false;
+            // Aquí llamamos a StartVanishing al salir de la colisión
+            if (killCube != null)
+            {
+                killCube.GetComponent<DeathCube>().StartVanishing(1f); // Cambia 0.5f por la velocidad que desees
             }
         }
     }
@@ -85,48 +98,32 @@ public class PipeCollision : MonoBehaviour
         playerController.transform.position = targetPosition;
     }
 
-    //Prepare to start raising up the kill cube
-    private void RaiseKillZone(Collider pipeCollider, float pipeHeight)
+    // Preparar el cubo de muerte
+    private void PrepareKillCube(Collider pipeCollider, float pipeHeight)
     {
         if (!isRaising && killCube != null)
         {
+            killCube.GetComponent<DeathCube>().RestartAlphaIntensity();
 
-            Vector3 pipeSize = pipeCollider.bounds.size;
-            
-            //Move kill cube to underground collided pipe
-            killCube.GetComponent<DeathCube>().MoveUnderground(
-                new Vector3(
-                    transform.position.x,
-                    //pipeGenerator.soilLevel - (killCube.transform.localScale.y / 2),
-                    pipeGenerator.soilLevel - pipeSize.y/2,
-                    killCube.transform.position.z
-                )
-            );
-
-            //Match the kill cube size to the pipe collider size
-            killCube.transform.localScale = new Vector3(
-                pipeSize.x + 0.1f, 
-                //pipeHeight,
-                pipeSize.y + 0.1f, 
-                pipeSize.z + 0.1f
-            );
-
-            Debug.Log("X: " + pipeSize.y + "XX: " +  pipeHeight);
-            
-            //Move kill cube to underground collided pipe
-            /*killCube.transform.position = new Vector3(
-                pipeCollider.transform.position.x, 
-                pipeGenerator.soilLevel - (killCube.transform.localScale.y / 2), 
-                killCube.transform.position.z
-            );*/
-
-            /*killCube.GetComponent<DeathCube>().MoveUnderground(
+            killCube.GetComponent<DeathCube>().MoveCube(
                 new Vector3(
                     transform.position.x,
                     pipeGenerator.soilLevel - (killCube.transform.localScale.y / 2),
                     transform.position.z
                 )
-            );*/
+            );
+
+            killCube.GetComponent<Renderer>().material.color = new Color(1f, 1f, 1f, 1f);
+            Vector3 pipeSize = pipeCollider.bounds.size;
+
+            // Ajustar el tamaño del cubo de muerte al tamaño del collider de la tubería
+            killCube.transform.localScale = new Vector3(
+                pipeSize.x + 0.1f, 
+                pipeSize.y + 0.1f, 
+                pipeSize.z + 0.1f
+            );
+
+            Debug.Log("X: " + pipeSize.y + "XX: " + pipeHeight);
 
             float targetHeight = (pipeSize.y / 2) + 0.2f; 
             Vector3 startPosition = killCube.transform.position;
@@ -135,82 +132,62 @@ public class PipeCollision : MonoBehaviour
         }
     }
 
-    private void OnCollisionStay(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Vector3 startPosition = killCube.transform.position;
-            Vector3 pipeSize = pipeCollider.bounds.size;
-            float targetHeight = (pipeSize.y / 2) + 0.2f; 
-
-            RaiseKillCube(startPosition, targetHeight, pipeCollider);
-        }
-    }
-    
-    //Try with OnCollisionStay and Exit
     private IEnumerator RaiseKillCube(Vector3 startPosition, float targetHeight, Collider pipeCollider)
+{
+    isRaising = true;
+
+    float elapsedTime = 0f;
+    float duration = 5.0f;
+    float stopSpeedFactor = 1f; // Factor para reducir la velocidad cuando no esté colisionando
+
+    while (elapsedTime < duration)
     {
-        isRaising = true;
-
-        float elapsedTime = 0f;
-        float duration = 5.0f;
-
-        while (elapsedTime < duration)
+        // Si ya no está colisionando, reduce la velocidad gradualmente
+        if (!isColliding)
         {
-            killCube.transform.position = Vector3.Lerp(
-                startPosition, 
-                new Vector3(startPosition.x, targetHeight, startPosition.z), 
-                elapsedTime / duration
-            );
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            stopSpeedFactor = Mathf.Max(0f, stopSpeedFactor - Time.deltaTime * 0.5f); // Reduce velocidad
         }
 
-        killCube.transform.position = new Vector3(startPosition.x, targetHeight, startPosition.z);
+        // Lerp ajustado por el factor de reducción de velocidad
+        killCube.transform.position = Vector3.Lerp(
+            startPosition, 
+            new Vector3(startPosition.x, targetHeight, startPosition.z), 
+            (elapsedTime / duration) * stopSpeedFactor // Multiplicar por el factor
+        );
+        
+        elapsedTime += Time.deltaTime;
 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
+        // Salir del ciclo si stopSpeedFactor llega a 0
+        if (stopSpeedFactor == 0f)
         {
-            PlayerController playerController = player.GetComponent<PlayerController>();
-            if (playerController != null)
-            {
-                float pipeWidth = pipeCollider.bounds.size.x;
-                float halfPipeWidth = pipeWidth / 2f;
+            break;
+        }
 
-                if (player.transform.position.x >= killCube.transform.position.x - halfPipeWidth &&
-                    player.transform.position.x <= killCube.transform.position.x + halfPipeWidth &&
-                    killCube.transform.position.y >= player.transform.position.y)
-                {
-                    playerController.Die();
-                }
+        yield return null;
+    }
+
+    killCube.transform.position = new Vector3(startPosition.x, targetHeight, startPosition.z);
+
+    // Verificar si el jugador está dentro del área del killCube para aplicar la lógica de muerte
+    GameObject player = GameObject.FindGameObjectWithTag("Player");
+    if (player != null)
+    {
+        PlayerController playerController = player.GetComponent<PlayerController>();
+        if (playerController != null)
+        {
+            float pipeWidth = pipeCollider.bounds.size.x;
+            float halfPipeWidth = pipeWidth / 2f;
+
+            if (player.transform.position.x >= killCube.transform.position.x - halfPipeWidth &&
+                player.transform.position.x <= killCube.transform.position.x + halfPipeWidth &&
+                killCube.transform.position.y >= player.transform.position.y)
+            {
+                playerController.Die();
             }
         }
-
-        yield return new WaitForSeconds(2f);
-        StartCoroutine(LowerKillCube());
     }
 
-    private IEnumerator LowerKillCube()
-    {
-        Vector3 startPosition = killCube.transform.position;
-        float targetHeight = pipeGenerator.soilLevel - (killCube.transform.localScale.y / 2);
+    yield return new WaitForSeconds(0f);
+}
 
-        float elapsedTime = 0f;
-        float duration = 2.0f;
-
-        while (elapsedTime < duration)
-        {
-            elapsedTime += Time.deltaTime;
-            Vector3 newPosition = Vector3.Lerp(
-                startPosition, 
-                new Vector3(startPosition.x, targetHeight, startPosition.z), 
-                Mathf.Clamp01(elapsedTime / duration)
-            );
-            killCube.transform.position = newPosition;
-            yield return null;
-        }
-
-        killCube.transform.position = new Vector3(startPosition.x, targetHeight, startPosition.z);
-        isRaising = false;
-    }
 }

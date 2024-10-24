@@ -1,11 +1,14 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
+
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] public float fallMultiplier = 2.5f;
     [SerializeField] public float lowJumpMultiplier = 2f;
     [SerializeField] public AudioClip deathSound;
+    [SerializeField] public AudioClip backgroundMusic; // Background music clip
 
     private Vector3 customForce;
     private Rigidbody rb; // Reference to the player's Rigidbody
@@ -18,6 +21,9 @@ public class PlayerController : MonoBehaviour
 
     private PlayerDeath playerDeath;
     private AudioSource audioSource;
+    private AudioSource musicSource; // AudioSource for background music
+
+    private GameObject killCube;
 
     void Start()
     {
@@ -28,10 +34,20 @@ public class PlayerController : MonoBehaviour
 
         playerDeath = GetComponent<PlayerDeath>();
 
+        // AudioSource for death sound
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.clip = deathSound;
         audioSource.playOnAwake = false;
         audioSource.loop = false;
+
+        // AudioSource for background music
+        musicSource = gameObject.AddComponent<AudioSource>();
+        musicSource.clip = backgroundMusic;
+        musicSource.loop = true; // Loop the background music
+        musicSource.volume = 0.25f; // Set initial volume (adjust as needed)
+        musicSource.Play(); // Start playing the background music
+
+        killCube = GameObject.Find("KillCube");
     }
 
     void Update()
@@ -96,8 +112,16 @@ public class PlayerController : MonoBehaviour
         deathMessage.gameObject.SetActive(true); // Show the death message
 
         playerDeath.OnPlayerDeath(); // Activate the dissolve effect
-        audioSource.Play();
-        Invoke("RestartGame", 4f); // Restart the game after 2 seconds
+        audioSource.Play(); // Play death sound
+        FadeOutMusic(); // Fade out background music
+
+        DeathCube deathCube = killCube.GetComponent<DeathCube>();
+        if (deathCube != null)
+        {
+            deathCube.MoveCube(new Vector3(0, -20f, 0)); 
+        }
+
+        Invoke("RestartGame", 4f); // Restart the game after 4 seconds
     }
 
     // Method to restart the game or reset player state
@@ -117,5 +141,28 @@ public class PlayerController : MonoBehaviour
         {
             pipeGenerator.RestartPipes();
         }
+
+        // Restart background music (if needed)
+        musicSource.volume = 0.5f; // Reset volume (or adjust as necessary)
+        musicSource.Play();
+    }
+
+    private void FadeOutMusic()
+    {
+        StartCoroutine(FadeOutCoroutine(1f)); // Fade out over 1 second
+    }
+
+    private IEnumerator FadeOutCoroutine(float duration)
+    {
+        float startVolume = musicSource.volume;
+
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            musicSource.volume = Mathf.Lerp(startVolume, 0, t / duration);
+            yield return null;
+        }
+
+        musicSource.Stop(); // Stop the music after fading out
+        musicSource.volume = startVolume; // Reset volume for next play
     }
 }

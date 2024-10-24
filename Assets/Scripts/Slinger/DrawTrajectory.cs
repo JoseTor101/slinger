@@ -22,6 +22,8 @@ public class DrawTrajectory : MonoBehaviour
 
     public void UpdateTrajectory(Vector3 forceVelocity, Vector3 startingPoint, Rigidbody rigidBody)
     {
+
+        
         // Velocity based on force applied and mass of the rigidbody
         Vector3 velocity = (forceVelocity / rigidBody.mass) * Time.fixedDeltaTime;
 
