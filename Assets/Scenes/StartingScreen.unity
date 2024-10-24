@@ -352,8 +352,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: Play
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 32a9f0c06f3c96b4480082abea2a207f, type: 2}
+  m_sharedMaterial: {fileID: -5704503400510110712, guid: 32a9f0c06f3c96b4480082abea2a207f,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -377,13 +378,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -526,8 +527,8 @@ Transform:
   m_GameObject: {fileID: 940895106}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 374, y: 204, z: 0}
-  m_LocalScale: {x: 780.5688, y: 428.37607, z: 0.13362001}
+  m_LocalPosition: {x: 947.7419, y: 521.5693, z: 0}
+  m_LocalScale: {x: 1970.483, y: 1139.7278, z: 0.13362001}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -569,7 +570,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -867,7 +868,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 3, y: -133}
+  m_AnchoredPosition: {x: 8, y: -288}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1447980387
@@ -955,7 +956,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 21.88
 --- !u!222 &1447980389
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -998,7 +999,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -20, y: 160}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1982434921
@@ -1021,13 +1022,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "******************************************\r\n*        WELCOME TO SLINGER!           
-    *\r\n******************************************\r\nObjective:\r\n----------\r\nAchieve
-    a higher score with each jump!\r\nControls:\r\n---------\r\nJump Between Pipes:
-    Click and drag to control your jump!\r\n\r\nBeware!\r\n-------\r\nThe floor is
-    lava! A cube will chase you if you take too long to jump!\r\n\r\nGet ready to
-    challenge yourself and have fun!\r\n\r\nDeveloped by: Jose Tordecilla ( @tordecilla_j)
-    \n\n"
+  m_text: "\n*            WELCOME TO SLINGER!            *\r\n\n~OBJECTIVE~\nAchieve
+    a higher score with each jump!\r\n~CONTROLS~\r\nClick and drag from player to
+    its back to control your jump!\r\n\nBEWARE!\r\nThe floor is lava! A cube will
+    chase you if you take too long to jump!\r\n\r\nGet ready to challenge yourself
+    and have fun!\r\nDeveloped by: Jose Tordecilla (@tordecilla_j) \n\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32a9f0c06f3c96b4480082abea2a207f, type: 2}
   m_sharedMaterial: {fileID: -5704503400510110712, guid: 32a9f0c06f3c96b4480082abea2a207f,
@@ -1055,8 +1054,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
-  m_fontSizeBase: 12
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1091,7 +1090,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -253.51358, y: -169.8577, z: -245.5098, w: -142.85226}
+  m_margin: {x: -668.8481, y: -169.8577, z: -701.66016, w: -563.52655}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
