@@ -39,6 +39,8 @@ public class DragAndShoot : MonoBehaviour
             return;
         mousePressDownPos = Input.mousePosition;
         soundPlayedDuringDrag = false;
+
+        
     }
 
     private void OnMouseDrag()

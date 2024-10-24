@@ -136,6 +136,9 @@ public class PlayerController : MonoBehaviour
         playerDeath.restartDeath();
         deathMessage.gameObject.SetActive(false); // Hide the death message
 
+        killCube.transform.position = new Vector3(killCube.transform.position.x, -20f, killCube.transform.position.z); // Reset killCube position
+
+        killCube.GetComponent<DeathCube>().raiseSpeed = 1f; // Reset raise speed
         PipeGenerator pipeGenerator = FindObjectOfType<PipeGenerator>();
         if (pipeGenerator != null)
         {
@@ -165,4 +168,16 @@ public class PlayerController : MonoBehaviour
         musicSource.Stop(); // Stop the music after fading out
         musicSource.volume = startVolume; // Reset volume for next play
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            Die();
+        }
+
+        
+    }
+
+
 }

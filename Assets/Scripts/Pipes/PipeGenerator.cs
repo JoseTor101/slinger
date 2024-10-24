@@ -7,21 +7,21 @@ public class PipeGenerator : MonoBehaviour
     public Transform player;
 
     [SerializeField] int numberOfSegments = 10;
-    [SerializeField] public float minSegmentHeight = 8f;
-    [SerializeField] public float maxSegmentHeight = 20f;
+    [SerializeField] public float minSegmentHeight = 6f;
+    [SerializeField] public float maxSegmentHeight = 8f;
     [SerializeField] public float soilLevel = 0f;
     [SerializeField] public float generationTriggerDistance = 30f;
 
     // Serialized fields to control pipe width (x) and depth (z)
     [SerializeField] public float xScale = 1.0f;
     [SerializeField] public float zScale = 1.0f;
-
+    [SerializeField] public float zPosition = -2f;
     [SerializeField] public GameObject killCube; // For inspector visibility
 
     public float raiseSpeed = 0.5f;
     private Vector3 lastPipePosition;
     private bool generating = false;
-    private float segmentLength = 10.0f;
+    public float segmentLength = 10.0f;
 
     private PlayerController playerController;
 
@@ -32,6 +32,7 @@ public class PipeGenerator : MonoBehaviour
     {
         GameObject player = GameObject.FindWithTag("Player");
 
+      
         if (pipePrefab != null && player != null)
         {
             playerController = player.GetComponent<PlayerController>();
@@ -50,12 +51,15 @@ public class PipeGenerator : MonoBehaviour
             generating = true; // Prevent multiple simultaneous generations
             GeneratePipes(numberOfSegments);
             generating = false;
+        }
 
-            if (playerController.GetScore() % 10 == 0)
-            {
-                segmentLength += 2.0f;
+          if(playerController.GetScore() % 10 == 0 && playerController.GetScore() != 0)
+        {
+            if(minSegmentHeight > 3.5f){
+                minSegmentHeight -= 0.5f;
             }
         }
+        
     }
 
     public void RestartPipes() // Method to call on player restart
@@ -63,6 +67,7 @@ public class PipeGenerator : MonoBehaviour
         ClearPipes(); // Clear existing pipes
         lastPipePosition = transform.position; // Reset last pipe position
         lastPipePosition.y = soilLevel; // Ensure it starts from the correct height
+        minSegmentHeight = 6f; // Reset min segment height
         GeneratePipes(numberOfSegments); // Generate new pipes
     }
 
@@ -89,7 +94,7 @@ public class PipeGenerator : MonoBehaviour
             pipeSegment.transform.localScale = new Vector3(xScale, segmentHeight, zScale);
 
             // Position the segment so it grows up from the soil
-            pipeSegment.transform.position = new Vector3(lastPipePosition.x, soilLevel, lastPipePosition.z);
+            pipeSegment.transform.position = new Vector3(lastPipePosition.x, soilLevel, zPosition);
 
             // Add collision detector
             PipeCollision pipeCollision = pipeSegment.AddComponent<PipeCollision>();  // Attaching a script to detect collisions
