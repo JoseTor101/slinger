@@ -13,11 +13,15 @@ public class PlayerController : MonoBehaviour
     private Vector3 customForce;
     private Rigidbody rb; // Reference to the player's Rigidbody
 
-    private int score;
-    private int level;
     public TextMeshProUGUI scoreCounter;
     public TextMeshProUGUI levelCounter;
     public TextMeshProUGUI deathMessage;
+
+    public TextMeshProUGUI highestScoreText;
+    private int level;
+    private int score;
+    private int highestScore;
+
 
     private PlayerDeath playerDeath;
     private AudioSource audioSource;
@@ -29,7 +33,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         score = 0;
-        level = 1;
+        level = 0;
         deathMessage.gameObject.SetActive(false); // Hide death message at start
 
         playerDeath = GetComponent<PlayerDeath>();
@@ -76,7 +80,15 @@ public class PlayerController : MonoBehaviour
         score += 1;
         SetCountText();
 
-        if (score % 10 == 0)
+        if (score > highestScore)
+        {
+            highestScore = score;
+            PlayerPrefs.SetInt("HighestScore", highestScore); // Guardar el nuevo puntaje más alto
+            UpdateHighestScoreText(); // Actualizar el texto en pantalla
+        }
+
+
+        if (score % 10 == 0 && score != 0)
         {
             level += 1;
             setLevelText();
@@ -103,6 +115,12 @@ public class PlayerController : MonoBehaviour
     {
         return score;
     }
+
+    void UpdateHighestScoreText()
+    {
+        highestScoreText.text = "Highest Score: " + highestScore.ToString();
+    }
+
 
     // Call this method when the player dies
     public void Die()
