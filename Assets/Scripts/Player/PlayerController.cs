@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         score = 0;
-        level = 1;
+        level = 0;
         deathMessage.gameObject.SetActive(false); // Hide death message at start
 
         playerDeath = GetComponent<PlayerDeath>();
@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        if (score % 10 == 0)
+        if (score % 10 == 0 && score != 0)
         {
             level += 1;
             setLevelText();
